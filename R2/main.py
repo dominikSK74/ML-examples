@@ -14,9 +14,10 @@ from sklearn.model_selection import cross_val_score, GridSearchCV, RandomizedSea
 from sklearn.ensemble import RandomForestRegressor
 from scipy.stats import randint
 import joblib
+from sklearn.feature_selection import SelectFromModel
 
 def save_model(model):
-    joblib.dump(model, 'california_housing_model.pkl')
+    joblib.dump(model, 'MODELS/california_housing_model.pkl')
 
 def load_housing_data():
     return pd.read_csv('R2/content/housing.csv')
@@ -86,6 +87,7 @@ def view_data():
 
 model = Pipeline(steps=[
     ('preprocessor', preprocessor),
+    ('features_selection', SelectFromModel(RandomForestRegressor(random_state=42)) ),
     ('regressor', RandomForestRegressor(random_state=42))
 ])
 
@@ -112,7 +114,9 @@ def cross_val():
 #===========================
 def grid_search():
     param_grid = {
-        'regressor__n_estimators': [184, 200],
+        'features_selection__threshold': ['mean', 'median', 0.01],
+        'features_selection__estimator__n_estimators': [10, 30, 50],
+        'regressor__n_estimators': [100, 184, 200],
         'regressor__max_depth': [15, None],
         'regressor__max_features': [7, 10] # 6 = 60% of features, 8 = 80% ...
     }
