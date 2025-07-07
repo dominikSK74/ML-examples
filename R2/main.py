@@ -20,7 +20,7 @@ def save_model(model):
     joblib.dump(model, 'MODELS/california_housing_model.pkl')
 
 def load_housing_data():
-    return pd.read_csv('R2/content/housing.csv')
+    return pd.read_csv('R2/content/data/housing.csv')
 
 data = load_housing_data()
 
