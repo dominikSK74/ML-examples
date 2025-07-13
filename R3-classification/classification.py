@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import SGDClassifier
-from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import cross_val_predict, cross_val_score
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, precision_recall_curve, roc_curve, roc_auc_score
 from sklearn.ensemble import RandomForestClassifier
 
@@ -133,4 +133,3 @@ threshold = 0.5
 print(f'METRICS FOR THRESHOLD = {threshold}')
 y_pred_forest  = (y_scores_forest >= threshold)
 print_metrics(y_train_5,  y_pred_forest)
-
