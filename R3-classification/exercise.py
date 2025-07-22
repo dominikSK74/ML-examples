@@ -1,6 +1,12 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline
+import joblib
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.preprocessing import StandardScaler, FunctionTransformer
 
 def move_pixel(digit, direction='left'):
     plane = digit.reshape(28, 28)
@@ -75,6 +81,36 @@ def make_digit_plot(data):
 
 X, y = load_extended_set()
 
-n = 6
-make_digit_plot(X[n])
-print(f'{y[n]}')
+# n = 6
+# make_digit_plot(X[n])
+# print(f'{y[n]}')
+
+#====================================
+#  SEARCH BEST PARAMS FOR MODEL
+#====================================
+def save_model(model):
+    joblib.dump(model, 'MODELS/mnist-784-extended.pkl')
+
+def to_float64(X):
+    return X.astype('float64')
+
+model = Pipeline(steps=[
+    ('to_float', FunctionTransformer(to_float64)),
+    ('scaler', StandardScaler()),
+    ('knn', KNeighborsClassifier(n_jobs=-1))
+])
+
+model.fit(X, y)
+
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='macro')
+recall = recall_score(y_test, y_pred, average='macro')
+f1 = f1_score(y_test, y_pred, average='macro')
+
+print(f"ACCURACY: {accuracy:.4f}")
+print(f"PRECISION: {precision:.4f}")
+print(f"RECALL: {recall:.4f}")
+print(f"F1: {f1:.4f}")
+
+save_model(model)
